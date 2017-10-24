@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"R Packages for LASSO\"\nauthor: Yingyi CHen\ndate: 2017.10.22\noutput: ioslides_presentation\n\n\n---\n  \n# How to Generate Data\n  \n## We need to derive \"XData\" and \"YData\"  \n```{r}\nn = 100\np = 500\nsigma_noise = 0.5\nbeta = rep(0, p)\nbeta[1:6] = c(5,10,3,80,90,10)\nXData = matrix(rnorm(n*p,sd=10), nrow = n, ncol=p)\nX=XData\nfor (i in 1:500){\n  X[,i]=((X[,i]-sum(X[,i])/n))/((var(X[,i])*99/100)^0.5)\n}\nYData = X %*% beta + rnorm(n, sd = sigma_noise)\nYData=YData-sum(YData)/100\nXData=X\n```\n\n\n# Algorithm for LASSO\n\n## Coordinate Descent for LASSO(lambda=0.5)\n```{r}\nlibrary(homework222)\n# Coordinate Descent for LASSO\nbetaHat1list = chenyingyi11(XData,YData,0.5)\nbetaHat1=unlist(betaHat1list[\"betahat\"])\ndiff1 = betaHat1 - beta\n# Here we present the L2 loss\nL2Losscoordinate = sqrt(sum(diff1^2))\n# True Positive Rate\nTP1 = sum(abs(beta)>0 & abs(betaHat1)>0) / sum(abs(beta)>0)\n# True Negative Rate\nTN1 = sum(abs(beta)==0 & abs(betaHat1)==0) / sum(abs(beta)==0)\n# Numbers of Iteration\nite1=unlist(betaHat1list[\"iteration\"])\n# Values of Objective Function\nf1=unlist(betaHat1list[\"object function\"])\n```\n\n\n## Proximal Operator for LASSO(lambda=1)\n```{r}\nlibrary(homework222)\n# Proximal Operator for LASSO\nbetaHat2list=chenyingyi22(XData, YData, 0.5)\nbetaHat2 = unlist(betaHat2list[\"betahat\"])\ndiff2 = betaHat2 - beta\n# Here we present the L2 loss\nL2Lossproximal = sqrt(sum(diff2^2))\n# True Positive Rate\nTP2 = sum(abs(beta)>0 & abs(betaHat2)>0) / sum(abs(beta)>0)\n# True Negative Rate\nTN2 = sum(abs(beta)==0 & abs(betaHat2)==0) / sum(abs(beta)==0)\n# Numbers of Iteration\nite2=unlist(betaHat2list[\"iteration\"])\n# Values of Objective Function\nf2=unlist(betaHat2list[\"object function\"])\n```\n---\n\n## Compare two algorithms\n- The \"X-axis\" represents iterations\n- The \"Y-axis\" represents log10 values of objective function\n- The red line is for Proximal Operator \n- The black line is for Coordinate Descent\n```{r}\n# log 10 Values of Objective Funcion\nf01=log10(f1[1:ite1])\nf02=log10(f2[1:ite2])\n```\n\n---\n```{r}\n#lambda=0.5\n#plot log10 values of object functions\n#numbers of iteration\nplot(1:ite2,f02,xlab=\"iteration\",\n     ylab=\"log object function\",\n     main=\"Coordinate Descent VS Proximal Operator \",\n     type=\"s\",col=2)\nlines(1:ite1,f01,col=1)\nlegend(\"topright\",inset=0.05,\n       c(\"Proximal Operator\",\"Coordinate Descent\"),\n       lty=c(1,1),col=c(\"red\",\"black\"))\n```\n--- \n# Conclusion\n## Conclusion for lambda=0.5\n- Coordinate Descent has less L2 loss but they will all be in TP and TN",
+    "created" : 1508648113544.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "574751589",
+    "id" : "7219A705",
+    "lastKnownWriteTime" : 1508649166,
+    "last_content_update" : 1508649166541,
+    "path" : "~/Desktop/homework222/rmarkdown.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

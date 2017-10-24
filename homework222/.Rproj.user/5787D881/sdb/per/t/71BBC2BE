@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\n  title: \"R Packages for LASSO\"\nauthor: Zhou Ya\ndate: 2017.10.15\noutput: ioslides_presentation\n\n\n---\n  \n  # Generate Data\n  \n  ## Get normalized data \"XData\" and \"YData\"  \n  ```{r}\nn = 100\np = 500\nsigma_noise = 0.5\nbeta = rep(0, p)\nbeta[1:6] = c(5,10,3,80,90,10)\nXData = matrix(rnorm(n*p,sd=10), nrow = n, ncol=p)\nX=XData\nfor (i in 1:500){\n  X[,i]=((X[,i]-sum(X[,i])/n))/((var(X[,i])*99/100)^0.5)\n}\nYData = X %*% beta + rnorm(n, sd = sigma_noise)\nYData=YData-sum(YData)/100\nXData=X\n```\n\n\n# Algorithm for LASSO\n\n## Coordinate Descent for LASSO(lambda=1)\n```{r}\nlibrary(zhouyahomework1)\n# Coordinate Descent for LASSO\nbetaHat1list = CoordinateDescent(XData,YData,1)\nbetaHat1=unlist(betaHat1list[\"betahat\"])\ndiff1 = betaHat1 - beta\n# L2 loss\nL2Loss1 = sqrt(sum(diff1^2))\n# True Positive Rate\nTP1 = sum(abs(beta)>0 & abs(betaHat1)>0) / sum(abs(beta)>0)\n# True Negative Rate\nTN1 = sum(abs(beta)==0 & abs(betaHat1)==0) / sum(abs(beta)==0)\n# Numbers of Iteration\nite1=unlist(betaHat1list[\"iteration\"])\n# Values of Objective Function\nf1=unlist(betaHat1list[\"object function\"])\n```\n\n\n## Proximal Operator for LASSO(lambda=1)\n```{r}\nlibrary(zhouyahomework1)\n# Proximal Operator for LASSO\nbetaHat2list=ProximalOperator(XData, YData, 1)\nbetaHat2 = unlist(betaHat2list[\"betahat\"])\ndiff2 = betaHat2 - beta\n# L2 loss\nL2Loss2 = sqrt(sum(diff2^2))\n# True Positive Rate\nTP2 = sum(abs(beta)>0 & abs(betaHat2)>0) / sum(abs(beta)>0)\n# True Negative Rate\nTN2 = sum(abs(beta)==0 & abs(betaHat2)==0) / sum(abs(beta)==0)\n# Numbers of Iteration\nite2=unlist(betaHat2list[\"iteration\"])\n# Values of Objective Function\nf2=unlist(betaHat2list[\"object function\"])\n```\n\n\n## Compare these two algorithms\n- Some Indexes\n- L2 loss and True Positive rate\n```{r}\ncat(\"the L2 loss for Coordinate Descentand Proximal Operator \n    are:\",L2Loss1,L2Loss2)\ncat(\"the True Positive Rate for Coordinate Descent and Proximal \n    Operator are:\",TP1,TP2)\n```\n\n## Compare these two algorithms\n- True Negative Rate and numbers of iteration\n```{r}\ncat(\"the True Negative Rate for Coordinate Descent and Proximal \n    Operator are:\",TN1,TN2)\ncat(\"the numbers of iteration for Coordinate Descent and Proximal \n    Operator are:\",ite1,ite2)\n```\n\n## Compare these two algorithms\n- The System time for lambda=1\n```{r}\nsystem.time(CoordinateDescent(XData,YData,1))\nsystem.time(ProximalOperator(XData, YData, 1))\n```\n\n## Compare these two algorithms\n- The following plot for values of objective funcion and corressponding objective funcions\n- The \"X-axis\" represents iterations and the \"Y-axis\" represents log10 values of objective function\n- The red line is for Proximal Operator while the black is for Coordinate Descent\n```{r}\n# log 10 Values of Objective Funcion\nf11=log10(f1[1:ite1])\nf22=log10(f2[1:ite2])\n```\n\n---\n  ```{r}\n#Notation: the case is lambda=1\n#plot log10 values of object functions and numbers of iteration\nplot(1:ite2,f22,xlab=\"iteration\",\n     ylab=\"log object function\",\n     main=\"Coordinate Descent VS Proximal Operator \",\n     type=\"s\",col=2)\nlines(1:ite1,f11,col=1)\nlegend(\"topright\",inset=0.05,\n       c(\"Proximal Operator\",\"Coordinate Descent\"),\n       lty=c(1,1),col=c(\"red\",\"black\"))\n```\n---\n  \n  # Conclusion\n  ## Conclusion for lambda=1\n  - Coordinate Descent has less L2 loss but both will\n- Both will in TP and TN\n- Coordinate Descent has far less iteration numbers\n- Coordinate Descent has far less system.time\n\n<div class=\"red2\">\n  Coordinate Descent for LASSO is better if lambda=1!",
+    "created" : 1508647197738.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "652838717",
+    "id" : "71BBC2BE",
+    "lastKnownWriteTime" : 1508647159,
+    "last_content_update" : 1508647159,
+    "path" : "~/Desktop/rmarkdowncheng.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

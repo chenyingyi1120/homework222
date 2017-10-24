@@ -1,0 +1,13 @@
+Package: homework222
+Type: Package
+Title: Compute the log density of multivariate normal distribution.
+Version: 1.0
+Date: 2017-10-22
+Author: Yingyi Chen
+Maintainer: Yingyi Chen
+     <chenyingyi@ruc.edu.cn>
+Description: Compute the log density of multivariate normal distribution.
+License: GNU GPLv3
+Imports: Rcpp (>= 0.12.13)
+LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 6.0.1
